@@ -1,6 +1,4 @@
-FROM    zaiste/jenkins
-
-RUN wget --no-check-certificate -P /var/lib/jenkins/plugins http://updates.jenkins-ci.org/latest/msbuild.hpi
+FROM    vitalybrusentsev/docker-jenkins
 
 RUN apt-get update \
 	&& apt-get install -y curl \

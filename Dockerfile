@@ -1,24 +1,18 @@
 FROM    vitalybrusentsev/docker-jenkins
 
 RUN apt-get update \
-	&& apt-get install -y curl \
-	&& rm -rf /var/lib/apt/lists/*
+	&& apt-get install -y curl zip \
+	&& git config --system url."https://".insteadOf git://
 
 RUN apt-key adv --keyserver pgp.mit.edu --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
 
 RUN echo "deb http://download.mono-project.com/repo/debian wheezy/snapshots/3.12.0 main" > /etc/apt/sources.list.d/mono-xamarin.list \
-	&& apt-get update \
-	&& apt-get install -y mono-devel ca-certificates-mono fsharp mono-vbnc nuget \
-	&& rm -rf /var/lib/apt/lists/*
+	&& apt-get install -y mono-devel ca-certificates-mono fsharp mono-vbnc nuget
 
-# Install Python.
+# Install Python & Node.js.
 RUN \
-  apt-get update && \
   apt-get install -y python python-dev python-pip python-virtualenv && \
-  rm -rf /var/lib/apt/lists/*
-  
-# Install Node.js
-RUN \
+  rm -rf /var/lib/apt/lists/* && \
   cd /tmp && \
   wget http://nodejs.org/dist/node-latest.tar.gz && \
   tar xvzf node-latest.tar.gz && \
@@ -30,4 +24,6 @@ RUN \
   cd /tmp && \
   rm -rf /tmp/node-v* && \
   npm install -g npm && \
-  echo -e '\n# Node.js\nexport PATH="node_modules/.bin:$PATH"' >> /root/.bashrc
+  echo -e '\n# Node.js\nexport PATH="node_modules/.bin:$PATH"' >> /root/.bashrc && \
+  apt-get clean && \
+  rm -rf /var/lib/apt/lists/
